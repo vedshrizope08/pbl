@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" data-root="../">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sales reports · CampusCanteen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"></head><body><nav class="top" id="nav"></nav>
+<main class="wrap"><h1>Sales reports</h1>
+<h2 style="margin-top:0">Sales this week (₹)</h2><div class="card"><div class="chart" id="c"></div></div>
+<h2>Top selling items</h2><div id="t"></div>
+</main><div id="toast"></div><script src="../js/data.js"></script><script src="../js/app.js"></script><script>subnav("admin");
+const d=[["Mon",8200],["Tue",9100],["Wed",7600],["Thu",9420],["Fri",10300],["Sat",3100]],mx=Math.max(...d.map(x=>x[1]));
+$("#c").innerHTML=d.map(([n,v])=>`<div class="${v===mx?"peak":""}" style="height:${v/mx*100}%" title="${rs(v)}"><span>${n}</span></div>`).join("");
+const top=[["Masala Chai",310],["Samosa (2 pcs)",240],["Veg Thali",190],["Vada Pav",170]];
+$("#t").innerHTML=`<table><tr><th>Item</th><th>Units sold</th></tr>${top.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td></tr>`).join("")}</table>`;
+</script></body></html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" data-root="../">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demand forecast · CampusCanteen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"></head><body><nav class="top" id="nav"></nav>
+<main class="wrap"><h1>Demand forecast</h1>
+<p class="muted">Based on past orders, class breaks and exam days. Connect this page to the AI service endpoint <code>/predict-demand</code>.</p>
+<div class="bar"><select id="day" aria-label="Day type"><option value="1">Normal day</option><option value="1.3">Exam day</option><option value="0.7">Holiday week</option></select></div>
+<div class="card"><div class="chart" id="c"></div></div>
+<h2>Suggested prep quantities for peak hour</h2><div id="t"></div>
+</main><div id="toast"></div><script src="../js/data.js"></script><script src="../js/app.js"></script><script>subnav("admin");
+const base=[["9",12],["10",18],["11",30],["12",72],["1",95],["2",48],["3",22],["4",30]];
+function dr(){const k=+$("#day").value,f=base.map(([h,v])=>[h,Math.round(v*k)]),mx=Math.max(...f.map(x=>x[1]));
+ $("#c").innerHTML=f.map(([h,v])=>`<div class="${v===mx?"peak":""}" style="height:${v/mx*100}%" title="${v} orders"><span>${h}</span></div>`).join("");
+ const w=[["Masala Chai",.25],["Samosa (2 pcs)",.2],["Veg Thali",.15],["Vada Pav",.12]];
+ $("#t").innerHTML=`<table><tr><th>Item</th><th>Prepare</th></tr>${w.map(x=>`<tr><td>${x[0]}</td><td>${Math.round(mx*x[1])} units</td></tr>`).join("")}</table><p style="margin-top:12px"><b>Staff needed at peak: ${Math.ceil(mx/25)}</b></p>`}
+$("#day").onchange=dr;dr();
+</script></body></html>

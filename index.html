@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIT Canteen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #14313a;
+            --page: #f2f5f4;
+            --surface: #ffffff;
+            --accent: #1f7a6b;
+            --accent-dark: #17594e;
+            --muted: #5b6b70;
+            --border: #d5dddf;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Manrope", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+            color: var(--ink);
+            background: var(--page);
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        a:focus-visible, button:focus-visible {
+            outline: 3px solid rgba(31, 122, 107, 0.4);
+            outline-offset: 3px;
+        }
+
+        /* Keeps all three sections the same width */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* ---------- 1. Navbar (horizontal) ---------- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            height: 72px;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--accent);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 0.9375rem;
+            font-weight: 600;
+        }
+
+        .nav-links > li > a,
+        .dropdown > button {
+            padding: 8px 0;
+            color: var(--ink);
+            transition: color 0.15s;
+        }
+
+        .nav-links > li > a:hover,
+        .dropdown > button:hover { color: var(--accent); }
+
+        /* Menu dropdown (CSS only) */
+        .dropdown { position: relative; }
+
+        .dropdown > button {
+            font: inherit;
+            font-weight: 600;
+            background: none;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .dropdown > button::after {
+            content: "";
+            display: inline-block;
+            margin-left: 8px;
+            width: 6px;
+            height: 6px;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: translateY(-3px) rotate(45deg);
+        }
+
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: -16px;
+            min-width: 160px;
+            margin: 0;
+            padding: 8px;
+            list-style: none;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 10px 24px rgba(20, 49, 58, 0.12);
+            display: none;
+        }
+
+        .dropdown:hover .dropdown-list,
+        .dropdown:focus-within .dropdown-list { display: block; }
+
+        .dropdown-list a {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 6px;
+        }
+
+        .dropdown-list a:hover { background: var(--page); color: var(--accent); }
+
+        .nav-cta {
+            padding: 10px 20px !important;
+            color: #fff !important;
+            background: var(--accent);
+            border-radius: 8px;
+            transition: background 0.15s;
+        }
+
+        .nav-cta:hover { background: var(--accent-dark); }
+
+        /* ---------- 2. Hero image ---------- */
+        .hero { padding-top: 32px; }
+
+        .hero-image {
+            display: block;
+            width: 100%;
+            height: clamp(260px, 46vh, 460px);
+            object-fit: cover;
+            object-position: center;
+            border-radius: 20px;
+            background: var(--ink); /* shows if the image fails to load */
+        }
+
+        /* ---------- 3. Dish grid (3 x 3) ---------- */
+        #third { padding: 56px 0 72px; }
+
+        #third h2 {
+            margin: 0 0 8px;
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .section-sub {
+            margin: 0 0 32px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .dish {
+            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .dish:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(20, 49, 58, 0.1);
+        }
+
+        .dish img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            background: #dfe7e5; /* shows if an image is missing */
+        }
+
+        .dish-name {
+            margin: 0;
+            padding: 16px 18px;
+            font-size: 1.0625rem;
+            font-weight: 700;
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 700px) {
+            .container { padding: 0 20px; }
+            .navbar .container { height: auto; padding-top: 14px; padding-bottom: 14px; flex-wrap: wrap; }
+            .nav-links { gap: 20px; flex-wrap: wrap; }
+            .hero { padding-top: 20px; }
+            .hero-image { border-radius: 14px; }
+        }
+
+        @media (max-width: 480px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Navbar -->
+    <header class="navbar">
+        <div class="container">
+            <a href="home.html" class="logo">MIT Canteen</a>
+
+            <ul class="nav-links">
+                <li class="dropdown">
+                    <button type="button">Menu</button>
+                    <ul class="dropdown-list">
+                        <li><a href="pages/Breakfast.html">Breakfast</a></li>
+                        <li><a href="pages/Lunch.html">Lunch</a></li>
+                        <li><a href="pages/Dinner.html">Dinner</a></li>
+                    </ul>
+                </li>
+                <li><a href="pages/aboutus.html">About us</a></li>
+                <li><a href="pages/login.html" class="nav-cta">Login</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <!-- 2. Hero image -->
+        <section class="hero">
+            <div class="container">
+                <img class="hero-image" src="veg-thali.avif" alt="Vegetarian thali">
+            </div>
+        </section>
+
+        <!-- 3. Dish grid -->
+        <section id="third">
+            <div class="container">
+                <h2>Popular dishes</h2>
+                <p class="section-sub">Fresh meals made daily at the canteen.</p>
+
+                <div class="grid">
+                    <article class="dish">
+                        <img src="Light-Poha-Recipe-1200x904.webp" alt="Poha">
+                        <h3 class="dish-name">Poha</h3>
+                    </article>
+                    <article class="dish">
+                        <img src="traditional-idli-sambar-with-colorful-chutneys-south-indian-breakfast-featuring-steamed-rice-cakes-rich-sambar_1260445-4952.avif" alt="Idli sambar">
+                        <h3 class="dish-name">Idli Sambar</h3>
+                    </article>
+                    <article class="dish">
+                        <img src="OIP_1.jpg" alt="Masala dosa">
+                        <h3 class="dish-name">Masala Dosa</h3>
+                    </article>
+                    <article class="dish">
+                        <img src="veg-thali.avif" alt="Veg thali">
+                        <h3 class="dish-name">Veg Thali</h3>
+                    </article>
+                    <article class="dish">
+                        <img src="PANEERMASAL.jpeg" alt="Paneer masala">
+                        <h3 class="dish-name">Paneer Masala</h3>
+                    </article>
+                    <article class="dish">
+                        <img src="VEGBRIYANI.jpeg" alt="Veg biryani">
+                        <h3 class="dish-name">Veg Biryani</h3>
+                    </article>
+                    <article class="dish">
+                        <img src="SAMOSA.jpeg" alt="Samosa">
+                        <h3 class="dish-name">Samosa</h3>
+                    </article>
+                    <article class="dish">
+                        <img src="VADAPAV.jpeg" alt="Vada pav">
+                        <h3 class="dish-name">Vada Pav</h3>
+                    </article>
+                    <article class="dish">
+                        <img src="COLDCOFEE.jpeg" alt="Cold coffee">
+                        <h3 class="dish-name">Cold Coffee</h3>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

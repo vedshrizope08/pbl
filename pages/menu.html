@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" data-root="../">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Menu · CampusCanteen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head><body><nav class="top" id="nav"></nav>
+<main class="wrap"><h1>Menu</h1><p class="muted">Items hide automatically when they sell out.</p>
+<div class="bar"><input id="q" type="search" placeholder="Search food" aria-label="Search food">
+<select id="cat" aria-label="Category"><option value="">All categories</option></select>
+<select id="diet" aria-label="Diet"><option value="">Veg & non-veg</option><option>veg</option><option>non-veg</option></select></div>
+<div class="grid" id="list"></div></main><div id="toast"></div>
+<script src="../js/data.js"></script><script src="../js/app.js"></script>
+<script>
+[...new Set(MENU.map(m=>m.cat))].forEach(c=>$("#cat").insertAdjacentHTML("beforeend",`<option>${c}</option>`));
+function draw(){const q=$("#q").value.toLowerCase(),c=$("#cat").value,d=$("#diet").value;
+ const items=MENU.filter(m=>m.name.toLowerCase().includes(q)&&(!c||m.cat===c)&&(!d||m.diet===d));
+ $("#list").innerHTML=items.length?items.map(m=>`<div class="card food ${m.stock?"":"soldout"}"><div class="emoji">${m.emoji}</div>
+ <h3>${m.name}</h3><div><span class="dot ${m.diet}"></span><span class="tag">${m.cat}</span> <span class="tag">${m.cal} kcal</span> <span class="tag">Spice ${m.spicy}/3</span></div>
+ <span class="muted">${m.stock?(m.stock<=8?"Only "+m.stock+" left":m.mins+" min prep"):"Sold out"}</span>
+ <div class="row"><b>${rs(m.price)}</b><button class="btn sm" ${m.stock?"":"disabled"} onclick="Cart.add(${m.id})">Add</button></div></div>`).join(""):"<p>No items match. Clear the filters to see the full menu.</p>"}
+["q","cat","diet"].forEach(i=>$("#"+i).addEventListener("input",draw));draw();
+</script></body></html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" data-root="../">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Staff dashboard · CampusCanteen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head><body><nav class="top" id="nav"></nav>
+<main class="wrap"><h1>Kitchen dashboard</h1>
+<div class="stats"><div class="card"><b>148</b>Orders today</div><div class="card"><b>₹9,420</b>Sales today</div><div class="card"><b>7</b>In preparation</div><div class="card"><b>4.3 ★</b>Average rating</div></div>
+<h2>Forecast: orders per hour</h2><p class="muted">Predicted from past orders, break timings and exam days. Red marks the peak.</p>
+<div class="card"><div class="chart" id="ch"></div></div>
+<h2>Live orders</h2><table><tr><th>Token</th><th>Items</th><th>Slot</th><th>Action</th></tr>
+<tr><td>214</td><td>Veg Thali, Chai</td><td>12:10</td><td><button class="btn sm">Mark ready</button></td></tr>
+<tr><td>215</td><td>2 × Samosa</td><td>12:10</td><td><button class="btn sm">Mark ready</button></td></tr></table>
+<h2>Low stock</h2><table id="low"><tr><th>Item</th><th>Left</th></tr></table></main>
+<script src="../js/data.js"></script><script src="../js/app.js"></script>
+<script>const f=[["9",12],["10",18],["11",30],["12",72],["1",95],["2",48],["3",22],["4",30]],mx=Math.max(...f.map(x=>x[1]));
+$("#ch").innerHTML=f.map(([h,v])=>`<div class="${v===mx?"peak":""}" style="height:${v/mx*100}%" title="${v} orders"><span>${h}</span></div>`).join("");
+$("#low").insertAdjacentHTML("beforeend",MENU.filter(m=>m.stock<=10).map(m=>`<tr><td>${m.name}</td><td>${m.stock||"Sold out"}</td></tr>`).join(""));</script></body></html>

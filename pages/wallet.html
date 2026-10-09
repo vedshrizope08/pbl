@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" data-root="../">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wallet · CampusCanteen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"></head><body><nav class="top" id="nav"></nav>
+<main class="wrap"><h1>Wallet</h1>
+<div class="two"><div><div class="card"><p class="muted">Balance</p><h2 id="bal" style="margin:4px 0">₹250</h2>
+<p class="muted">Add ₹200 or more and get 5% cashback.</p>
+<form class="inline" id="f"><input id="amt" type="number" min="50" step="10" placeholder="Amount in ₹" required aria-label="Amount"><button class="btn alt">Add money (UPI)</button></form></div>
+<h2>Split a bill</h2><div class="card"><form class="inline" id="sp"><input id="n" type="number" min="2" max="10" placeholder="Number of friends" required aria-label="Friends"><input id="t" type="number" min="1" placeholder="Bill total ₹" required aria-label="Bill total"><button class="btn">Calculate</button></form><p id="r"></p></div></div>
+<div><h2 style="margin-top:0">Transactions</h2><table id="tx"><tr><th>When</th><th>Amount</th></tr></table></div></div>
+</main><div id="toast"></div><script src="../js/data.js"></script><script src="../js/app.js"></script><script>subnav("student");
+let b=250;const tx=[["Today","+₹100"],["6 Oct","−₹110"],["3 Oct","−₹60"]];
+const dt=()=>$("#tx").innerHTML="<tr><th>When</th><th>Amount</th></tr>"+tx.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td></tr>`).join("");dt();
+$("#f").onsubmit=e=>{e.preventDefault();const a=+$("#amt").value,c=a>=200?Math.round(a*.05):0;b+=a+c;$("#bal").textContent=rs(b);tx.unshift(["Now","+"+rs(a+c)]);dt();toast(c?"Added with ₹"+c+" cashback":"Money added");e.target.reset()};
+$("#sp").onsubmit=e=>{e.preventDefault();const n=+$("#n").value+1;$("#r").textContent=`Each person pays ${rs(Math.ceil($("#t").value/n))} (${n} people).`};
+</script></body></html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" data-root="../">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Manage orders · CampusCanteen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"></head><body><nav class="top" id="nav"></nav>
+<main class="wrap"><h1>Manage orders</h1>
+<div id="t"></div></main><div id="toast"></div><script src="../js/data.js"></script><script src="../js/app.js"></script><script>subnav("admin");
+const S=["Placed","Preparing","Ready","Collected"];
+const od=[{k:214,i:"Veg Thali, Chai",s:"12:10",st:0},{k:215,i:"2 × Samosa",s:"12:10",st:1},{k:216,i:"Chicken Biryani",s:"12:20",st:2},{k:217,i:"Paneer Roll, Cold Coffee",s:"12:20",st:0}];
+function dr(){$("#t").innerHTML=`<table><tr><th>Token</th><th>Items</th><th>Slot</th><th>Status</th><th></th></tr>${od.map((o,j)=>`<tr><td>${o.k}</td><td>${o.i}</td><td>${o.s}</td><td><span class="pill ${o.st>1?"ok":"wait"}">${S[o.st]}</span></td>
+<td>${o.st<3?`<button class="btn sm" onclick="od[${j}].st++;dr()">Mark ${S[o.st+1].toLowerCase()}</button>`:"Done"}</td></tr>`).join("")}</table>`}dr();
+</script></body></html>

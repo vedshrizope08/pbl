@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinner Menu | MIT Canteen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #14313a;
+            --page: #f2f5f4;
+            --surface: #ffffff;
+            --accent: #1f7a6b;
+            --accent-dark: #17594e;
+            --muted: #5b6b70;
+            --border: #d5dddf;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; font-family: "Manrope", "Segoe UI", system-ui, Arial, sans-serif; color: var(--ink); background: var(--page); }
+        a { color: inherit; text-decoration: none; }
+        a:focus-visible { outline: 3px solid rgba(31,122,107,0.4); outline-offset: 3px; }
+        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+        .navbar { position: sticky; top: 0; z-index: 10; background: var(--surface); border-bottom: 1px solid var(--border); }
+        .navbar .container { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 72px; }
+        .logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; color: var(--accent); }
+        .nav-links { display: flex; align-items: center; gap: 32px; margin: 0; padding: 0; list-style: none; font-size: 0.9375rem; font-weight: 600; }
+        .nav-links a:hover { color: var(--accent); }
+        .nav-links .nav-cta { padding: 10px 20px; color: #fff; background: var(--accent); border-radius: 8px; }
+        .nav-links .nav-cta:hover { background: var(--accent-dark); color: #fff; }
+
+        main { padding: 48px 0 72px; }
+        h1 { margin: 0 0 8px; font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+        .sub { margin: 0 0 24px; color: var(--muted); }
+
+        .tabs { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+        .tabs a { padding: 8px 18px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); font-weight: 600; font-size: 0.9375rem; }
+        .tabs a:hover { border-color: var(--accent); color: var(--accent); }
+        .tabs a.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+        .menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .dish { overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; transition: transform 0.15s, box-shadow 0.15s; }
+        .dish:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(20,49,58,0.1); }
+        .dish img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #dfe7e5; }
+        .dish-body { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 18px; }
+        .dish-name { margin: 0; font-size: 1.0625rem; font-weight: 700; }
+        .price { font-size: 1.125rem; font-weight: 800; color: var(--accent); white-space: nowrap; }
+
+        @media (max-width: 900px) { .menu { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .menu { grid-template-columns: 1fr; } }
+        @media (max-width: 700px) {
+            .container { padding: 0 20px; }
+            .navbar .container { height: auto; padding-top: 14px; padding-bottom: 14px; flex-wrap: wrap; }
+            .nav-links { gap: 20px; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="container">
+            <a href="../index.html" class="logo">MIT Canteen</a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="aboutus.html">About us</a></li>
+                <li><a href="login.html" class="nav-cta">Sign up / Log in</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Dinner</h1>
+            <p class="sub">Served 7:00 PM – 9:30 PM</p>
+
+            <nav class="tabs" aria-label="Menu sections">
+                <a href="breakfast.html">Breakfast</a>
+                <a href="lunch.html">Lunch</a>
+                <a href="dinner.html" class="active">Dinner</a>
+            </nav>
+
+            <section class="menu">
+                <article class="dish">
+                    <img src="dal_tadka.jpg" alt="Dal Tadka Rice">
+                    <div class="dish-body">
+                        <h3 class="dish-name">Dal Tadka Rice</h3>
+                        <span class="price">₹80</span>
+                    </div>
+                </article>
+                <article class="dish">
+                    <img src="PANEERMASAL.jpeg" alt="Paneer Butter Masala">
+                    <div class="dish-body">
+                        <h3 class="dish-name">Paneer Butter Masala</h3>
+                        <span class="price">₹120</span>
+                    </div>
+                </article>
+                <article class="dish">
+                    <img src="pav bhaji.jpeg" alt="Pav Bhaji">
+                    <div class="dish-body">
+                        <h3 class="dish-name">Pav Bhaji</h3>
+                        <span class="price">₹70</span>
+                    </div>
+                </article>
+                <article class="dish">
+                    <img src="vegfriedrice.jpeg" alt="Veg Fried Rice">
+                    <div class="dish-body">
+                        <h3 class="dish-name">Veg Fried Rice</h3>
+                        <span class="price">₹70</span>
+                    </div>
+                </article>
+                <article class="dish">
+                    <img src="hakka noodles.jpeg" alt="Hakka Noodles">
+                    <div class="dish-body">
+                        <h3 class="dish-name">Hakka Noodles</h3>
+                        <span class="price">₹70</span>
+                    </div>
+                </article>
+                <article class="dish">
+                    <img src="Gulab Jamun.jpg" alt="Gulab Jamun">
+                    <div class="dish-body">
+                        <h3 class="dish-name">Gulab Jamun</h3>
+                        <span class="price">₹30</span>
+                    </div>
+                </article>
+                <article class="dish">
+                    <img src="COLDCOFEE.jpeg" alt="Cold Coffee">
+                    <div class="dish-body">
+                        <h3 class="dish-name">Cold Coffee</h3>
+                        <span class="price">₹45</span>
+                    </div>
+                </article>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

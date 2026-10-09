@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" data-root="../">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inventory · CampusCanteen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"></head><body><nav class="top" id="nav"></nav>
+<main class="wrap"><h1>Inventory</h1>
+<div id="t"></div></main><div id="toast"></div><script src="../js/data.js"></script><script src="../js/app.js"></script><script>subnav("admin");
+const st=MENU.map(m=>({n:m.name,q:m.stock,min:10}));
+function dr(){$("#t").innerHTML=`<table><tr><th>Item</th><th>In stock</th><th>Status</th><th>Restock</th></tr>${st.map((s,i)=>`<tr><td>${s.n}</td><td>${s.q}</td>
+<td>${s.q===0?'<span class="flag">Sold out</span>':s.q<=s.min?'<span class="flag">Low stock</span>':'<span class="pill ok">OK</span>'}</td>
+<td><button class="btn ghost sm" onclick="st[${i}].q+=20;dr();toast('Added 20 units')">+20</button></td></tr>`).join("")}</table>`}dr();
+</script></body></html>

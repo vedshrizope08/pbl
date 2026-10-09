@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" data-root="../">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Manage menu · CampusCanteen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"></head><body><nav class="top" id="nav"></nav>
+<main class="wrap"><h1>Manage menu</h1>
+<form class="inline" id="f"><input id="nm" placeholder="Item name" required aria-label="Item name"><input id="pr" type="number" min="1" placeholder="Price ₹" required aria-label="Price">
+<select id="ct" aria-label="Category"><option>Breakfast</option><option>Lunch</option><option>Snacks</option><option>Beverages</option></select>
+<select id="dt" aria-label="Diet"><option>veg</option><option>non-veg</option></select><button class="btn alt">Add item</button></form><div id="t"></div>
+</main><div id="toast"></div><script src="../js/data.js"></script><script src="../js/app.js"></script><script>subnav("admin");
+const items=MENU.map(m=>({...m,on:m.stock>0}));
+function dr(){$("#t").innerHTML=`<table><tr><th>Item</th><th>Category</th><th>Price</th><th>Available</th><th></th></tr>${items.map((m,i)=>`<tr><td><span class="dot ${m.diet}"></span>${m.name}</td><td>${m.cat}</td><td>${rs(m.price)}</td>
+<td><input type="checkbox" ${m.on?"checked":""} onchange="items[${i}].on=this.checked" aria-label="Available"></td><td><button class="btn ghost sm" onclick="items.splice(${i},1);dr()">Delete</button></td></tr>`).join("")}</table>`}dr();
+$("#f").onsubmit=e=>{e.preventDefault();items.push({name:$("#nm").value,price:+$("#pr").value,cat:$("#ct").value,diet:$("#dt").value,on:true});dr();e.target.reset();toast("Item added")};
+</script></body></html>

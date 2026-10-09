@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" data-root="../">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout · CampusCanteen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+</head><body><nav class="top" id="nav"></nav>
+<main class="wrap"><h1>Checkout</h1><div class="two"><div>
+<h2 style="margin-top:0">Pickup slot</h2><div class="slots" id="slots"></div>
+<h2>Payment</h2><div class="field"><select id="pay" aria-label="Payment method"><option>UPI</option><option>Canteen wallet</option><option>Card</option></select></div></div>
+<div class="card"><h3>Summary</h3><p id="sum" class="muted" style="margin:8px 0"></p><p><b id="tot"></b></p>
+<button class="btn alt" id="go" style="margin-top:14px;width:100%" disabled>Pay and place order</button></div></div></main><div id="toast"></div>
+<script src="../js/data.js"></script><script src="../js/app.js"></script>
+<script>
+let slot=null;const c=Cart.get();
+if(!c.length)location.href="cart.html";
+$("#sum").textContent=c.map(x=>x.qty+" × "+MENU.find(m=>m.id===x.id).name).join(", ");$("#tot").textContent="Total "+rs(Cart.total());
+$("#slots").innerHTML=SLOTS.map(s=>`<button class="slot ${s.left?"":"full"}" data-t="${s.t}">${s.t}<small>${s.left?s.left+" spots":"Full"}</small></button>`).join("");
+$("#slots").onclick=e=>{const b=e.target.closest(".slot");if(!b)return;document.querySelectorAll(".slot").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");slot=b.dataset.t;$("#go").disabled=false};
+$("#go").onclick=()=>{ // TODO: call Razorpay + POST /api/orders here
+ const o={id:"ORD"+Date.now().toString().slice(-6),token:Math.floor(100+Math.random()*900),slot,total:Cart.total(),items:c,start:Date.now()};
+ try{localStorage.setItem("order",JSON.stringify(o))}catch{} Cart.save([]);location.href="track-order.html"};
+</script></body></html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login | Smart Canteen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #14313a;
+            --page: #f2f5f4;
+            --surface: #ffffff;
+            --accent: #1f7a6b;
+            --accent-dark: #17594e;
+            --muted: #5b6b70;
+            --border: #d5dddf;
+            --error: #b3261e;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html, body { height: 100%; }
+
+        body {
+            margin: 0;
+            font-family: "Manrope", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+            color: var(--ink);
+            background: var(--page);
+        }
+
+        /* Two-column grid: login left, image right */
+        .login-page {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+        }
+
+        /* Left: login panel */
+        .login-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 32px;
+            background: var(--surface);
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .brand {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0 0 48px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+            line-height: 1.2;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            margin: 0 0 32px;
+            color: var(--muted);
+            font-size: 0.975rem;
+            line-height: 1.5;
+        }
+
+        .field { margin-bottom: 20px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 13px 14px;
+            font: inherit;
+            color: var(--ink);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        input::placeholder { color: #8a979b; }
+
+        input:hover { border-color: #aebbbe; }
+
+        input:focus-visible {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(31, 122, 107, 0.25);
+        }
+
+        input.invalid { border-color: var(--error); }
+
+        /* Message shown above the form (error / success) */
+        .form-alert {
+            display: none;
+            margin: 0 0 20px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        .form-alert.show { display: block; }
+        .form-alert.error { color: var(--error); background: #fbeae8; border: 1px solid #f0c4be; }
+        .form-alert.success { color: var(--accent-dark); background: #e3f3ef; border: 1px solid #b7dfd5; }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: -4px 0 28px;
+            font-size: 0.875rem;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            font-weight: 500;
+            color: var(--muted);
+        }
+
+        .remember input { accent-color: var(--accent); width: 16px; height: 16px; }
+
+        a {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        a:hover { text-decoration: underline; }
+
+        a:focus-visible, button:focus-visible {
+            outline: 3px solid rgba(31, 122, 107, 0.4);
+            outline-offset: 2px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            font: inherit;
+            font-weight: 700;
+            color: #fff;
+            background: var(--accent);
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .btn:hover { background: var(--accent-dark); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .help {
+            margin: 28px 0 0;
+            font-size: 0.875rem;
+            color: var(--muted);
+        }
+
+        /* Right: image panel */
+        .image-panel {
+            position: relative;
+            background: var(--ink); /* shows if the image fails to load */
+            overflow: hidden;
+        }
+
+        .image-panel img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Tablet and mobile: stack, image becomes a banner on top */
+        @media (max-width: 860px) {
+            .login-page {
+                grid-template-columns: 1fr;
+                grid-template-rows: 220px auto;
+            }
+            .image-panel { order: -1; }
+            .login-panel { padding: 36px 24px 48px; align-items: flex-start; }
+            .brand { margin-bottom: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="login-page">
+
+        <!-- Left: login -->
+        <section class="login-panel">
+            <div class="login-box">
+                <p class="brand">Smart Canteen</p>
+
+                <h1>Student login</h1>
+                <p class="subtitle">Sign in to order food and track your orders.</p>
+
+                <div id="formAlert" class="form-alert" role="alert"></div>
+
+                <form id="loginForm" action="#" method="post" novalidate>
+                    <div class="field">
+                        <label for="username">Student ID or email</label>
+                        <input type="text" id="username" name="username"
+                               placeholder="e.g. ADT24SOCB1095" autocomplete="username" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password"
+                               placeholder="Enter your password" autocomplete="current-password" required>
+                    </div>
+
+                    <div class="row">
+                        <label class="remember" for="remember">
+                            <input type="checkbox" id="remember" name="remember">
+                            Remember me
+                        </label>
+                        <a href="#">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn" id="submitBtn">Log in</button>
+                </form>
+
+                <p class="help">New student? <a href="signup.html">Create an account</a></p>
+            </div>
+        </section>
+
+        <!-- Right: image -->
+        <section class="image-panel">
+            <img src="OIP.jpg" alt="Canteen food">
+        </section>
+
+    </main>
+
+    <script>
+    (function () {
+        "use strict";
+
+        /* ---------- Settings ---------- */
+        var USERS_KEY    = "canteenUsers";        // same key used by signup.html
+        var SESSION_KEY  = "canteenCurrentUser";  // who is logged in
+        var AFTER_LOGIN  = "../index.html";       // page to open after login (change if needed)
+
+        /* ---------- Elements ---------- */
+        var form      = document.getElementById("loginForm");
+        var alertBox  = document.getElementById("formAlert");
+        var submitBtn = document.getElementById("submitBtn");
+        var idInput   = document.getElementById("username");
+        var pwInput   = document.getElementById("password");
+        var remember  = document.getElementById("remember");
+
+        /* ---------- Helpers ---------- */
+        function loadUsers() {
+            try {
+                var data = JSON.parse(localStorage.getItem(USERS_KEY));
+                return Array.isArray(data) ? data : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        // Must be identical to the hashing in signup.html
+        async function hashPassword(text) {
+            if (window.crypto && window.crypto.subtle) {
+                var bytes = new TextEncoder().encode(text);
+                var buf = await window.crypto.subtle.digest("SHA-256", bytes);
+                return Array.from(new Uint8Array(buf))
+                    .map(function (b) { return b.toString(16).padStart(2, "0"); })
+                    .join("");
+            }
+            return text;
+        }
+
+        function showAlert(type, message) {
+            alertBox.className = "form-alert show " + type;
+            alertBox.textContent = message;
+        }
+
+        function hideAlert() {
+            alertBox.className = "form-alert";
+            alertBox.textContent = "";
+            idInput.classList.remove("invalid");
+            pwInput.classList.remove("invalid");
+        }
+
+        idInput.addEventListener("input", hideAlert);
+        pwInput.addEventListener("input", hideAlert);
+
+        // Already logged in? Skip the login page.
+        if (localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY)) {
+            window.location.replace(AFTER_LOGIN);
+            return;
+        }
+
+        /* ---------- Submit ---------- */
+        form.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            hideAlert();
+
+            var typedId  = idInput.value.trim();
+            var password = pwInput.value;
+
+            if (!typedId || !password) {
+                showAlert("error", "Please enter your Student ID (or email) and password.");
+                return;
+            }
+
+            // Match by Student ID (capitals) or email (lowercase)
+            var idKey    = typedId.toUpperCase();
+            var emailKey = typedId.toLowerCase();
+            var user = loadUsers().find(function (u) {
+                return u.studentId === idKey || u.email === emailKey;
+            });
+
+            // 1) Account was never created through the sign up page
+            if (!user) {
+                idInput.classList.add("invalid");
+                showAlert("error", "No account found with these details. Please sign up first.");
+                return;
+            }
+
+            // 2) Account exists but the password is wrong
+            submitBtn.disabled = true;
+            var hash = await hashPassword(password);
+            if (hash !== user.passwordHash) {
+                pwInput.classList.add("invalid");
+                showAlert("error", "Incorrect password. Please try again.");
+                submitBtn.disabled = false;
+                return;
+            }
+
+            // 3) Success: remember who is logged in (no password saved)
+            var session = JSON.stringify({
+                id: user.id,
+                name: user.name,
+                studentId: user.studentId,
+                email: user.email,
+                phone: user.phone
+            });
+            // "Remember me" keeps the login after the browser closes
+            (remember.checked ? localStorage : sessionStorage).setItem(SESSION_KEY, session);
+
+            showAlert("success", "Welcome, " + user.name + "! Redirecting...");
+            setTimeout(function () { window.location.href = AFTER_LOGIN; }, 1000);
+        });
+    })();
+    </script>
+</body>
+</html>

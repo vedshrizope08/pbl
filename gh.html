@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MIT Canteen - fresh vegetarian meals made daily. Browse breakfast, lunch and dinner menus.">
+    <title>MIT Canteen</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #14313a;
+            --page: #f4f7f6;
+            --surface: #ffffff;
+            --accent: #1f7a6b;
+            --accent-dark: #17594e;
+            --accent-soft: #e3f1ee;
+            --saffron: #f2a83b;
+            --muted: #55666b;
+            --border: #d9e1e2;
+            --radius: 16px;
+            --shadow: 0 1px 2px rgba(20, 49, 58, 0.06), 0 8px 24px rgba(20, 49, 58, 0.06);
+            --shadow-lg: 0 2px 4px rgba(20, 49, 58, 0.08), 0 18px 40px rgba(20, 49, 58, 0.14);
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+
+        body {
+            margin: 0;
+            font-family: "Manrope", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+            color: var(--ink);
+            background: var(--page);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        a:focus-visible, button:focus-visible {
+            outline: 3px solid rgba(31, 122, 107, 0.5);
+            outline-offset: 3px;
+            border-radius: 6px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        .skip-link {
+            position: absolute;
+            left: 16px;
+            top: -60px;
+            z-index: 100;
+            padding: 10px 16px;
+            background: var(--ink);
+            color: #fff;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .skip-link:focus { top: 12px; }
+
+        /* ---------- Navbar ---------- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: saturate(160%) blur(10px);
+            -webkit-backdrop-filter: saturate(160%) blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            height: 72px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: "Bricolage Grotesque", "Manrope", sans-serif;
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+        }
+
+        .logo-mark {
+            display: grid;
+            place-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 0.9375rem;
+            font-weight: 600;
+        }
+
+        .nav-links > li > a,
+        .dropdown > button {
+            display: inline-block;
+            padding: 10px 14px;
+            color: var(--ink);
+            border-radius: 8px;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .nav-links > li > a:hover,
+        .dropdown > button:hover,
+        .dropdown:focus-within > button { color: var(--accent); background: var(--accent-soft); }
+
+        .dropdown { position: relative; }
+
+        .dropdown > button {
+            font: inherit;
+            font-weight: 600;
+            background: none;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .dropdown > button::after {
+            content: "";
+            display: inline-block;
+            margin-left: 8px;
+            width: 6px;
+            height: 6px;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: translateY(-3px) rotate(45deg);
+            transition: transform 0.2s;
+        }
+
+        .dropdown:hover > button::after,
+        .dropdown:focus-within > button::after { transform: translateY(-1px) rotate(225deg); }
+
+        /* padding-top bridges the gap so the menu doesn't close while moving the mouse */
+        .dropdown-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 180px;
+            margin: 0;
+            padding: 12px 0 0;
+            list-style: none;
+            display: none;
+        }
+
+        .dropdown-list-inner {
+            padding: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dropdown:hover .dropdown-list,
+        .dropdown:focus-within .dropdown-list { display: block; }
+
+        .dropdown-list a {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .dropdown-list a:hover { background: var(--accent-soft); color: var(--accent-dark); }
+
+        .nav-links .nav-cta {
+            margin-left: 8px;
+            padding: 10px 22px;
+            color: #fff;
+            background: var(--accent);
+            border-radius: 10px;
+            transition: background 0.15s, transform 0.15s;
+        }
+
+        .nav-links .nav-cta:hover { background: var(--accent-dark); color: #fff; }
+
+        .menu-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--ink);
+        }
+
+        .menu-toggle span,
+        .menu-toggle span::before,
+        .menu-toggle span::after {
+            display: block;
+            width: 18px;
+            height: 2px;
+            margin: 0 auto;
+            background: currentColor;
+            border-radius: 2px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        .menu-toggle span { position: relative; }
+        .menu-toggle span::before, .menu-toggle span::after { content: ""; position: absolute; left: 0; }
+        .menu-toggle span::before { top: -6px; }
+        .menu-toggle span::after { top: 6px; }
+        .menu-toggle[aria-expanded="true"] span { background: transparent; }
+        .menu-toggle[aria-expanded="true"] span::before { top: 0; transform: rotate(45deg); }
+        .menu-toggle[aria-expanded="true"] span::after { top: 0; transform: rotate(-45deg); }
+
+        /* ---------- Hero ---------- */
+        .hero { padding-top: 28px; }
+
+        .hero-frame {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            background: var(--ink);
+            box-shadow: var(--shadow-lg);
+            isolation: isolate;
+        }
+
+        .hero-image {
+            display: block;
+            width: 100%;
+            height: clamp(340px, 56vh, 540px);
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .hero-frame::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(90deg, rgba(10, 30, 36, 0.82) 0%, rgba(10, 30, 36, 0.5) 45%, rgba(10, 30, 36, 0.05) 100%);
+        }
+
+        .hero-content {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 clamp(24px, 6vw, 72px);
+            max-width: 680px;
+            color: #fff;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            margin-bottom: 18px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.16);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 999px;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        .hero-badge::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--saffron);
+        }
+
+        .hero h1 {
+            margin: 0 0 14px;
+            font-family: "Bricolage Grotesque", "Manrope", sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+        }
+
+        .hero p {
+            margin: 0 0 28px;
+            font-size: clamp(1rem, 1.6vw, 1.125rem);
+            line-height: 1.55;
+            color: rgba(255, 255, 255, 0.88);
+            max-width: 46ch;
+        }
+
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 26px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.15s;
+        }
+
+        .btn:active { transform: translateY(1px); }
+
+        .btn-primary { background: var(--saffron); color: #2b1a00; }
+        .btn-primary:hover { background: #f7b95a; }
+
+        .btn-ghost { color: #fff; border-color: rgba(255, 255, 255, 0.55); }
+        .btn-ghost:hover { background: rgba(255, 255, 255, 0.14); border-color: #fff; }
+
+        /* ---------- Info strip ---------- */
+        .info-strip {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 18px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .info-icon {
+            flex: none;
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        .info-icon svg { width: 22px; height: 22px; }
+
+        .info-item strong { display: block; font-size: 0.9375rem; }
+        .info-item span { font-size: 0.875rem; color: var(--muted); }
+
+        /* ---------- Dishes ---------- */
+        #third { padding: 64px 0 80px; }
+
+        .section-head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        #third h2 {
+            margin: 0 0 6px;
+            font-family: "Bricolage Grotesque", "Manrope", sans-serif;
+            font-size: clamp(1.75rem, 3vw, 2.25rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+
+        .section-sub { margin: 0; color: var(--muted); }
+
+        .view-all {
+            flex: none;
+            padding: 10px 18px;
+            font-weight: 700;
+            font-size: 0.9375rem;
+            color: var(--accent-dark);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            transition: background 0.15s, color 0.15s;
+        }
+        .view-all:hover { background: var(--accent); color: #fff; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
+        .dish {
+            position: relative;
+            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .dish:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+        .dish-media { position: relative; overflow: hidden; }
+
+        .dish img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            background: #dfe7e5;
+            transition: transform 0.4s ease;
+        }
+
+        .dish:hover img { transform: scale(1.05); }
+
+        .dish-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            padding: 5px 12px;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: var(--accent-dark);
+            background: rgba(255, 255, 255, 0.94);
+            border-radius: 999px;
+        }
+
+        .dish-body {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px 18px;
+        }
+
+        .dish-name {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .veg-mark {
+            flex: none;
+            display: inline-grid;
+            place-items: center;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #2e9d4f;
+            border-radius: 4px;
+        }
+        .veg-mark::after {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #2e9d4f;
+        }
+
+        /* ---------- Footer ---------- */
+        .footer {
+            background: var(--ink);
+            color: rgba(255, 255, 255, 0.78);
+        }
+
+        .footer .container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px 32px;
+            padding-top: 28px;
+            padding-bottom: 28px;
+            font-size: 0.9375rem;
+        }
+
+        .footer .logo { color: #fff; font-size: 1.15rem; }
+        .footer-links { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 0; padding: 0; list-style: none; font-weight: 600; }
+        .footer-links a:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+
+        /* ---------- Motion preferences ---------- */
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+            *, *::before, *::after { transition: none !important; }
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .info-strip { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 760px) {
+            .container { padding: 0 20px; }
+            .navbar .container { height: 64px; }
+            .menu-toggle { display: block; }
+
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 2px;
+                padding: 12px 20px 20px;
+                background: var(--surface);
+                border-bottom: 1px solid var(--border);
+                box-shadow: var(--shadow-lg);
+            }
+            .nav-links.open { display: flex; }
+
+            .nav-links > li > a,
+            .dropdown > button { display: block; width: 100%; text-align: left; padding: 14px 12px; }
+
+            .dropdown > button { display: flex; align-items: center; justify-content: space-between; }
+            .dropdown > button::after { margin-left: auto; }
+
+            /* Menu list is always visible inside the mobile panel */
+            .dropdown-list { position: static; display: block; min-width: 0; padding: 0 0 0 12px; }
+            .dropdown-list-inner { padding: 0; border: 0; box-shadow: none; background: transparent; }
+            .dropdown > button::after { display: none; }
+
+            .nav-links .nav-cta { margin: 8px 0 0; text-align: center; }
+
+            .hero { padding-top: 16px; }
+            .hero-frame { border-radius: 18px; }
+            .hero-image { height: 420px; }
+            .hero-frame::after { background: linear-gradient(180deg, rgba(10, 30, 36, 0.25) 0%, rgba(10, 30, 36, 0.88) 100%); }
+            .hero-content { justify-content: flex-end; padding-bottom: 28px; }
+            .hero-actions .btn { flex: 1 1 100%; }
+
+            .section-head { flex-direction: column; align-items: flex-start; gap: 16px; }
+            #third { padding: 48px 0 56px; }
+        }
+
+        @media (max-width: 520px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- 1. Navbar -->
+    <header class="navbar">
+        <div class="container">
+            <a href="home.html" class="logo" aria-label="MIT Canteen home">
+                <span class="logo-mark" aria-hidden="true">M</span>
+                MIT Canteen
+            </a>
+
+            <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+                <span></span>
+            </button>
+
+            <ul class="nav-links" id="nav-links">
+                <li class="dropdown">
+                    <button type="button" aria-haspopup="true">Menu</button>
+                    <ul class="dropdown-list">
+                        <li class="dropdown-list-inner">
+                            <a href="pages/Breakfast.html">Breakfast</a>
+                            <a href="pages/Lunch.html">Lunch</a>
+                            <a href="pages/Dinner.html">Dinner</a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="pages/aboutus.html">About us</a></li>
+                <li><a href="pages/login.html" class="nav-cta">Login</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main id="main">
+        <!-- 2. Hero image -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-frame">
+                    <img class="hero-image" src="veg-thali.avif" alt="Vegetarian thali">
+                    <div class="hero-content">
+                        <span class="hero-badge">Fresh meals made daily</span>
+                        <h1>Good food, right on campus.</h1>
+                        <p>Hot breakfast, filling lunches and evening snacks, all cooked fresh at the MIT Canteen.</p>
+                        <div class="hero-actions">
+                            <a class="btn btn-primary" href="pages/Lunch.html">View menu</a>
+                            <a class="btn btn-ghost" href="#third">Popular dishes</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-strip">
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c2 3 5 4 5 8a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-4 1-7z"/><path d="M5 21h14"/></svg>
+                        </span>
+                        <div><strong>Cooked fresh</strong><span>Prepared every day</span></div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c-5-3-8-7-8-11 0-3 3-5 6-3 1 .7 2 .7 2 .7s1 0 2-.7c3-2 6 0 6 3 0 4-3 8-8 11z" transform="scale(.9) translate(1.3 1)"/></svg>
+                        </span>
+                        <div><strong>100% vegetarian</strong><span>Wholesome meals for everyone</span></div>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                        </span>
+                        <div><strong>Breakfast, lunch &amp; dinner</strong><span>Pick a menu from the top bar</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Dish grid -->
+        <section id="third">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <h2>Popular dishes</h2>
+                        <p class="section-sub">Fresh meals made daily at the canteen.</p>
+                    </div>
+                    <a class="view-all" href="pages/Lunch.html">See full menu</a>
+                </div>
+
+                <div class="grid">
+                    <article class="dish">
+                        <div class="dish-media">
+                            <img src="Light-Poha-Recipe-1200x904.webp" alt="Poha" loading="lazy">
+                            <span class="dish-tag">Breakfast</span>
+                        </div>
+                        <div class="dish-body">
+                            <h3 class="dish-name">Poha</h3>
+                            <span class="veg-mark" title="Vegetarian" aria-label="Vegetarian"></span>
+                        </div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-media">
+                            <img src="traditional-idli-sambar-with-colorful-chutneys-south-indian-breakfast-featuring-steamed-rice-cakes-rich-sambar_1260445-4952.avif" alt="Idli sambar" loading="lazy">
+                            <span class="dish-tag">Breakfast</span>
+                        </div>
+                        <div class="dish-body">
+                            <h3 class="dish-name">Idli Sambar</h3>
+                            <span class="veg-mark" title="Vegetarian" aria-label="Vegetarian"></span>
+                        </div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-media">
+                            <img src="OIP_1.jpg" alt="Masala dosa" loading="lazy">
+                            <span class="dish-tag">Breakfast</span>
+                        </div>
+                        <div class="dish-body">
+                            <h3 class="dish-name">Masala Dosa</h3>
+                            <span class="veg-mark" title="Vegetarian" aria-label="Vegetarian"></span>
+                        </div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-media">
+                            <img src="veg-thali.avif" alt="Veg thali" loading="lazy">
+                            <span class="dish-tag">Lunch</span>
+                        </div>
+                        <div class="dish-body">
+                            <h3 class="dish-name">Veg Thali</h3>
+                            <span class="veg-mark" title="Vegetarian" aria-label="Vegetarian"></span>
+                        </div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-media">
+                            <img src="PANEERMASAL.jpeg" alt="Paneer masala" loading="lazy">
+                            <span class="dish-tag">Lunch</span>
+                        </div>
+                        <div class="dish-body">
+                            <h3 class="dish-name">Paneer Masala</h3>
+                            <span class="veg-mark" title="Vegetarian" aria-label="Vegetarian"></span>
+                        </div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-media">
+                            <img src="VEGBRIYANI.jpeg" alt="Veg biryani" loading="lazy">
+                            <span class="dish-tag">Lunch</span>
+                        </div>
+                        <div class="dish-body">
+                            <h3 class="dish-name">Veg Biryani</h3>
+                            <span class="veg-mark" title="Vegetarian" aria-label="Vegetarian"></span>
+                        </div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-media">
+                            <img src="SAMOSA.jpeg" alt="Samosa" loading="lazy">
+                            <span class="dish-tag">Snacks</span>
+                        </div>
+                        <div class="dish-body">
+                            <h3 class="dish-name">Samosa</h3>
+                            <span class="veg-mark" title="Vegetarian" aria-label="Vegetarian"></span>
+                        </div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-media">
+                            <img src="VADAPAV.jpeg" alt="Vada pav" loading="lazy">
+                            <span class="dish-tag">Snacks</span>
+                        </div>
+                        <div class="dish-body">
+                            <h3 class="dish-name">Vada Pav</h3>
+                            <span class="veg-mark" title="Vegetarian" aria-label="Vegetarian"></span>
+                        </div>
+                    </article>
+                    <article class="dish">
+                        <div class="dish-media">
+                            <img src="COLDCOFEE.jpeg" alt="Cold coffee" loading="lazy">
+                            <span class="dish-tag">Drinks</span>
+                        </div>
+                        <div class="dish-body">
+                            <h3 class="dish-name">Cold Coffee</h3>
+                            <span class="veg-mark" title="Vegetarian" aria-label="Vegetarian"></span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="home.html" class="logo">
+                <span class="logo-mark" aria-hidden="true">M</span>
+                MIT Canteen
+            </a>
+            <ul class="footer-links">
+                <li><a href="pages/Breakfast.html">Breakfast</a></li>
+                <li><a href="pages/Lunch.html">Lunch</a></li>
+                <li><a href="pages/Dinner.html">Dinner</a></li>
+                <li><a href="pages/aboutus.html">About us</a></li>
+                <li><a href="pages/login.html">Login</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        (function () {
+            var toggle = document.querySelector('.menu-toggle');
+            var links = document.getElementById('nav-links');
+            toggle.addEventListener('click', function () {
+                var open = links.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+            links.addEventListener('click', function (e) {
+                if (e.target.closest('a')) {
+                    links.classList.remove('open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" data-root="../">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Payments · CampusCanteen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css"></head><body><nav class="top" id="nav"></nav>
+<main class="wrap"><h1>Payments</h1>
+<div class="stats" style="margin-bottom:20px"><div class="card"><b>₹9,420</b>Collected today</div><div class="card"><b>₹1,150</b>Wallet</div><div class="card"><b>₹8,270</b>UPI and card</div></div><div id="t"></div>
+</main><div id="toast"></div><script src="../js/data.js"></script><script src="../js/app.js"></script><script>subnav("admin");
+const p=[["PAY8841","ORD104233","UPI",92,"Paid"],["PAY8842","ORD104240","Wallet",110,"Paid"],["PAY8843","ORD104251","Card",60,"Pending"],["PAY8844","ORD104262","UPI",45,"Refunded"]];
+$("#t").innerHTML=`<table><tr><th>Payment</th><th>Order</th><th>Method</th><th>Amount</th><th>Status</th></tr>${p.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${rs(r[3])}</td><td><span class="pill ${r[4]==="Paid"?"ok":"wait"}">${r[4]}</span></td></tr>`).join("")}</table>`;
+</script></body></html>
